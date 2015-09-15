@@ -49,7 +49,7 @@ var rental = {
         "firstName": " Sami",
         "lastName": "Ameziane"
       },
-      "car_id": "p-boxster",
+      "carId": "p-boxster",
       "pickupDate": "2015-09-12",
       "returnDate": "2015-09-14",
       "distance": 100
@@ -74,7 +74,6 @@ function getCar(carId){
 };
 
 function getNumberOfDays (from, to) {
-    var millis = Date.parse(to) - Date.parse(from);
     return (( Date.parse(to) - Date.parse(from) ) / (24 * 60 * 60 * 1000) ) + 1;
 };
 
@@ -90,10 +89,9 @@ function calculRentalPrice(res) {
   DISPLAY RESULT
   *
   */
-
+  var result;
   for(var i = 0; i < rentals.length; i++) {
+      result += calculRentalPrice(rentals[i]) +"  / ";
       console.log(calculRentalPrice(rentals[i]));
-
   }
-
-alert(getCar("p306").id);
+ document.getElementById("result").innerHTML = result;
