@@ -11,7 +11,7 @@ Drivy take a 30% commission on the rental price to cover their costs.
 The commission is split like this:
 
 * **insurance**: half of roadside
-* **commission assistance** 1€ per day
+* **assistance commission** 1€ per day
 * **drivy**: the rest
 
 Compute the amount that belongs to the insurance, to the assistance and to drivy.

@@ -1,5 +1,12 @@
 'use strict';
 
+/* parameters */
+const discountMoreThanOneDay = 10 / 100;
+const discountMoreThanFourDay = 30 / 100;
+const discountMoreThanTenDay = 50 / 100;
+const deductibleOptionPriceADay = 4;
+const commissionRate = 30 / 100;
+/* end parameters */
 
 var rental = {
   "cars": [
@@ -30,7 +37,10 @@ var rental = {
       "carId": "p306",
       "pickupDate": "2015-09-12",
       "returnDate": "2015-09-14",
-      "distance": 150
+      "distance": 150,
+      "options":{
+        "deductibleReduction": true
+      }
     },
     {
       "id": "2-rs-92",
@@ -41,7 +51,10 @@ var rental = {
       "carId": "rr-sport",
       "pickupDate": "2015-09-09",
       "returnDate": "2015-09-13",
-      "distance": 550
+      "distance": 550,
+      "options":{
+        "deductibleReduction": false
+      }
     },
     {
       "id": "3-sa-92",
@@ -52,7 +65,10 @@ var rental = {
       "carId": "p-boxster",
       "pickupDate": "2015-09-12",
       "returnDate": "2015-09-14",
-      "distance": 100
+      "distance": 100,
+      "options":{
+        "deductibleReduction": true
+      }
     }
   ]
 };
@@ -82,13 +98,13 @@ function getNumberOfDays (from, to) {
 
 function calculDiscount(pricePerDay, numberOfDays) {
     if(numberOfDays > 10) {
-      return pricePerDay - (pricePerDay * 50 / 100);
+      return pricePerDay - (pricePerDay * discountMoreThanTenDay);
     }
     else if(numberOfDays > 4) {
-      return pricePerDay - (pricePerDay * 30 / 100);
+      return pricePerDay - (pricePerDay * discountMoreThanFourDay);
     }
     else if(numberOfDays > 1) {
-      return pricePerDay - (pricePerDay * 10 / 100);
+      return pricePerDay - (pricePerDay * discountMoreThanOneDay);
     }
     else {
       return pricePerDay;
@@ -99,17 +115,21 @@ function calculRentalPrice(rental) {
     var rentalDays = getNumberOfDays(rental.pickupDate, rental.returnDate);   // give us the number of days
     var carRented = getCar(rental.carId);                                  // give us the car object
 
-    // calcul ex1
-    // return rentalDays * carRented.pricePerDay + res.distance * carRented.pricePerKm;
-    // calcul ex2 - Drive more, pay less
-    return rentalDays * calculDiscount(carRented.pricePerDay, rentalDays) + rental.distance * carRented.pricePerKm;
-};
 
+    // calcul ex1
+    // var total = rentalDays * carRented.pricePerDay + res.distance * carRented.pricePerKm;
+    // calcul ex2 - Drive more, pay less
+    var total =  rentalDays * calculDiscount(carRented.pricePerDay, rentalDays) + rental.distance * carRented.pricePerKm;
+
+
+    return total;
+};
+// for ex 3
 function calculCommission(rental) {
-   var commission = calculRentalPrice(rental) * 30/100;
+   var commission = calculRentalPrice(rental) * commissionRate;
    var insurance = commission / 2;
    var assistance = getNumberOfDays(rental.pickupDate, rental.returnDate);
-   var drivy = commission - insurance - assistance;
+   var drivy = commission - insurance - assistance + calculDeductibleReduction(rental); // the reduction goes directly to drivy
    var result = {
                   "insurance" : insurance ,
                   "assistance": assistance,
@@ -117,6 +137,15 @@ function calculCommission(rental) {
                  }
     return result;
 }
+// for ex 4
+function calculDeductibleReduction(rental) {
+    var deductibleReductionOptionIsSelected = rental.options.deductibleReduction;
+    if(deductibleReductionOptionIsSelected) {
+      return deductibleOptionPriceADay * getNumberOfDays(rental.pickupDate, rental.returnDate);
+    }
+    return 0;
+}
+
 
 
 /*
@@ -128,49 +157,36 @@ function calculCommission(rental) {
 
     var reservation = {
         "id" : rentals[i].driver.firstName + " " + rentals[i].driver.lastName,
-        "price" : calculRentalPrice(rentals[i]),
-        "commission" : calculCommission(rentals[i])
+        "price" : calculRentalPrice(rentals[i]) + calculDeductibleReduction(rentals[i]),
+        "commission" : calculCommission(rentals[i]),
+        "options" : {  "deductibleReduction" : calculDeductibleReduction(rentals[i]) }
     }
     dataJsonResult.reservations.push(reservation); // we store our result in a JSon Object.
 
+    var dataTable = [
+                      reservation.id,
+                      reservation.price,
+                      reservation.commission.insurance,
+                      reservation.commission.assistance,
+                      reservation.commission.drivy,
+                      reservation.options.deductibleReduction
+                    ];
+
+    // var tabBody = document.getElementsByTagName("tbody").item(i);
+    // var row= document.createElement("tr");
+    // for(var j = 0; j<6; j++) {
+    //     var cell = document.createElement("td");
+    //     var txtnode =document.createTextNode(dataTable[j]);
+    //     cell.appendChild(txtnode);
+    //     row.appendChild(cell);
+    //     tabBody.appendChild(row);
+    // }
       result += "(" + rentals[i].id  +") ~"
               +  getNumberOfDays(rentals[i].pickupDate, rentals[i].returnDate)+ "j~"
                + reservation.id
                 + " = " + reservation.price +"€<br/> ";
 
-  }
+} // end for all rentals
  document.getElementById("result").innerHTML = result;
 
 console.log(JSON.stringify(dataJsonResult));
-
-
-
-
-
-
-
-//  var sitePersonel = {};
-// var employees = []
-//
-//
-// sitePersonel.employees = employees;
-//
-// console.log(sitePersonel);
-//
-// var firstName = "John";
-// var lastName = "Smith";
-// var employee = {
-//     "firstName": firstName,
-//     "lastName": lastName
-// }
-//
-// sitePersonel.employees.push(employee);
-//
-// console.log(sitePersonel);
-//
-// var manager = "Jane Doe";
-// sitePersonel.employees[0].manager = manager;
-//
-// console.log(sitePersonel);
-//
-// console.log(JSON.stringify(sitePersonel));

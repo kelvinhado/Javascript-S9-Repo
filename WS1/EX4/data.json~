@@ -42,7 +42,7 @@
         "firstName": " Sami",
         "lastName": "Ameziane"
       },
-      "carId": "p306",
+      "car_id": "p306",
       "pickupDate": "2015-08-31",
       "returnDate": "2015-09-13",
       "distance": 1000,
