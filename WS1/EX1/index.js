@@ -6,6 +6,7 @@ const discountMoreThanFourDay = 30 / 100;
 const discountMoreThanTenDay = 50 / 100;
 const deductibleOptionPriceADay = 4;
 const commissionRate = 30 / 100;
+const insuranceRate = 50 / 100;
 /* end parameters */
 
 var rental = {
@@ -79,6 +80,11 @@ var rentals = rental.rentals;
 var dataJsonResult = {};      //our JSon result
 var reservations = [];
 dataJsonResult.reservations = reservations;
+
+var dataJsonDebitCredit = {}; // to store our Debit Credit result (cf ex5)
+var resa = [];
+dataJsonDebitCredit.resa = resa;
+
 /*
  FUNCTIONS
  *
@@ -125,9 +131,9 @@ function calculRentalPrice(rental) {
     return total;
 };
 // for ex 3
-function calculCommission(rental) {
+function generateCommission(rental) {
    var commission = calculRentalPrice(rental) * commissionRate;
-   var insurance = commission / 2;
+   var insurance = commission * insuranceRate;
    var assistance = getNumberOfDays(rental.pickupDate, rental.returnDate);
    var drivy = commission - insurance - assistance + calculDeductibleReduction(rental); // the reduction goes directly to drivy
    var result = {
@@ -146,30 +152,90 @@ function calculDeductibleReduction(rental) {
     return 0;
 }
 
+function storeReservationsInJson() {
+  for(var i = 0; i < rentals.length; i++) {
+    var reservation = {
+        "id" : rentals[i].driver.firstName + " " + rentals[i].driver.lastName,
+        "price" : calculRentalPrice(rentals[i]) + calculDeductibleReduction(rentals[i]),
+        "commission" : generateCommission(rentals[i]),
+        "options" : {  "deductibleReduction" : calculDeductibleReduction(rentals[i]) }
+    }
+    dataJsonResult.reservations.push(reservation); // we store our result in a JSon Object.
+  }
+}
+// ex 5 we will extract and display data using a new Json
+function storeCreditDebitInJson() {
+  for(var i = 0; i < rentals.length; i++) {
+
+
+      var resa = {
+          "id" : rentals[i].id,
+          "action" : generateDebitCredit(rentals[i])
+      }
+      dataJsonDebitCredit.resa.push(resa);
+  }
+}
+
+function generateDebitCredit(rental) {
+      var rentalPrice = calculRentalPrice(rental);
+      var commission = rentalPrice * commissionRate;
+
+      var driverAmount = rentalPrice + calculDeductibleReduction(rental);
+      var ownerAmount = rentalPrice - commission;
+      var insuranceAmount = commission * insuranceRate;
+      var assistanceAmount = getNumberOfDays(rental.pickupDate, rental.returnDate);
+      var drivyAmount = commission - insuranceAmount - assistanceAmount + calculDeductibleReduction(rental);
+
+
+      const entities =        ["driver"       , "owner"       , "insurance"       , "assistance"        , "drivy"];
+      const entitiesAmount =  [driverAmount , ownerAmount , insuranceAmount , assistanceAmount  , drivyAmount];
+
+      var resultDC = [];
+
+      for(var i = 0; i < entities.length; i++)
+      {
+         resultDC[i] = {
+                      "who" : entities[i],
+                      "type" : "credit",
+                      "amount" : entitiesAmount[i]
+                    }
+          if( entities[i] === entities[0]) {
+              resultDC[i].type = "debit";
+          }
+
+      }
+      return resultDC;
+
+      //return [ { "who" : "me", "type" : "debit", "amount" : 456 } {}]
+}
+
+
+
+
+
+
+
+
 
 
 /*
   Display the result for each rentals and store result in Json
   *
   */
+storeReservationsInJson();
+storeCreditDebitInJson();
+
   var result = "";
-  for(var i = 0; i < rentals.length; i++) {
+  for(var i = 0; i < dataJsonResult.reservations.length; i++) {
 
-    var reservation = {
-        "id" : rentals[i].driver.firstName + " " + rentals[i].driver.lastName,
-        "price" : calculRentalPrice(rentals[i]) + calculDeductibleReduction(rentals[i]),
-        "commission" : calculCommission(rentals[i]),
-        "options" : {  "deductibleReduction" : calculDeductibleReduction(rentals[i]) }
-    }
-    dataJsonResult.reservations.push(reservation); // we store our result in a JSon Object.
-
+    var reservation = dataJsonResult.reservations;
     var dataTable = [
-                      reservation.id,
-                      reservation.price,
-                      reservation.commission.insurance,
-                      reservation.commission.assistance,
-                      reservation.commission.drivy,
-                      reservation.options.deductibleReduction
+                      reservation[i].id,
+                      reservation[i].price,
+                      reservation[i].commission.insurance,
+                      reservation[i].commission.assistance,
+                      reservation[i].commission.drivy,
+                      reservation[i].options.deductibleReduction
                     ];
 
     // var tabBody = document.getElementsByTagName("tbody").item(i);
@@ -181,12 +247,11 @@ function calculDeductibleReduction(rental) {
     //     row.appendChild(cell);
     //     tabBody.appendChild(row);
     // }
-      result += "(" + rentals[i].id  +") ~"
-              +  getNumberOfDays(rentals[i].pickupDate, rentals[i].returnDate)+ "j~"
-               + reservation.id
-                + " = " + reservation.price +"€<br/> ";
+      result += reservation[i].id
+                + " = " + reservation[i].price +"€<br/> ";
 
 } // end for all rentals
  document.getElementById("result").innerHTML = result;
 
 console.log(JSON.stringify(dataJsonResult));
+console.log(JSON.stringify(dataJsonDebitCredit));
