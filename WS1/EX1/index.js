@@ -77,13 +77,29 @@ function getNumberOfDays (from, to) {
     return (( Date.parse(to) - Date.parse(from) ) / (24 * 60 * 60 * 1000) ) + 1;
 };
 
+function calculDiscount(pricePerDay, numberOfDays) {
+    if(numberOfDays > 10) {
+      return pricePerDay - (pricePerDay * 50 / 100);
+    }
+    else if(numberOfDays > 4) {
+      return pricePerDay - (pricePerDay * 30 / 100);
+    }
+    else if(numberOfDays > 1) {
+      return pricePerDay - (pricePerDay * 10 / 100);
+    }
+    else {
+      return pricePerDay;
+    }
+}
 
 function calculRentalPrice(res) {
     var rentalDays = getNumberOfDays(res.pickupDate, res.returnDate);   // give us the number of days
     var carRented = getCar(res.carId);                                  // give us the car object
 
-    // calcul
-    return rentalDays * carRented.pricePerDay + res.distance * carRented.pricePerKm;
+    // calcul ex1
+    // return rentalDays * carRented.pricePerDay + res.distance * carRented.pricePerKm;
+    // calcul ex2 - Drive more, pay less
+    return rentalDays * calculDiscount(carRented.pricePerDay, rentalDays) + res.distance * carRented.pricePerKm;
 };
 
 /*
@@ -92,7 +108,10 @@ function calculRentalPrice(res) {
   */
   var result = "";
   for(var i = 0; i < rentals.length; i++) {
-      result += "(" + rentals[i].id  +") " + rentals[i].driver.firstName + " " + rentals[i].driver.lastName + " = " + calculRentalPrice(rentals[i]) +"€<br/> ";
+      result += "(" + rentals[i].id  +") ~"
+              +  getNumberOfDays(rentals[i].pickupDate, rentals[i].returnDate)+ "j~"
+               + rentals[i].driver.firstName + " " + rentals[i].driver.lastName
+                + " = " + calculRentalPrice(rentals[i]) +"€<br/> ";
       console.log(calculRentalPrice(rentals[i]));
   }
- document.getElementById("result-ex1").innerHTML = result;
+ document.getElementById("result").innerHTML = result;
