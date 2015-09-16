@@ -60,6 +60,9 @@ var rental = {
 var cars = rental.cars;
 var rentals = rental.rentals;
 
+var dataJsonResult = {};      //our JSon result
+var reservations = [];
+dataJsonResult.reservations = reservations;
 /*
  FUNCTIONS
  *
@@ -92,26 +95,82 @@ function calculDiscount(pricePerDay, numberOfDays) {
     }
 }
 
-function calculRentalPrice(res) {
-    var rentalDays = getNumberOfDays(res.pickupDate, res.returnDate);   // give us the number of days
-    var carRented = getCar(res.carId);                                  // give us the car object
+function calculRentalPrice(rental) {
+    var rentalDays = getNumberOfDays(rental.pickupDate, rental.returnDate);   // give us the number of days
+    var carRented = getCar(rental.carId);                                  // give us the car object
 
     // calcul ex1
     // return rentalDays * carRented.pricePerDay + res.distance * carRented.pricePerKm;
     // calcul ex2 - Drive more, pay less
-    return rentalDays * calculDiscount(carRented.pricePerDay, rentalDays) + res.distance * carRented.pricePerKm;
+    return rentalDays * calculDiscount(carRented.pricePerDay, rentalDays) + rental.distance * carRented.pricePerKm;
 };
 
+function calculCommission(rental) {
+   var commission = calculRentalPrice(rental) * 30/100;
+   var insurance = commission / 2;
+   var assistance = getNumberOfDays(rental.pickupDate, rental.returnDate);
+   var drivy = commission - insurance - assistance;
+   var result = {
+                  "insurance" : insurance ,
+                  "assistance": assistance,
+                  "drivy" : drivy
+                 }
+    return result;
+}
+
+
 /*
-  Display the result for each rentals
+  Display the result for each rentals and store result in Json
   *
   */
   var result = "";
   for(var i = 0; i < rentals.length; i++) {
+
+    var reservation = {
+        "id" : rentals[i].driver.firstName + " " + rentals[i].driver.lastName,
+        "price" : calculRentalPrice(rentals[i]),
+        "commission" : calculCommission(rentals[i])
+    }
+    dataJsonResult.reservations.push(reservation); // we store our result in a JSon Object.
+
       result += "(" + rentals[i].id  +") ~"
               +  getNumberOfDays(rentals[i].pickupDate, rentals[i].returnDate)+ "j~"
-               + rentals[i].driver.firstName + " " + rentals[i].driver.lastName
-                + " = " + calculRentalPrice(rentals[i]) +"€<br/> ";
-      console.log(calculRentalPrice(rentals[i]));
+               + reservation.id
+                + " = " + reservation.price +"€<br/> ";
+
   }
  document.getElementById("result").innerHTML = result;
+
+console.log(JSON.stringify(dataJsonResult));
+
+
+
+
+
+
+
+//  var sitePersonel = {};
+// var employees = []
+//
+//
+// sitePersonel.employees = employees;
+//
+// console.log(sitePersonel);
+//
+// var firstName = "John";
+// var lastName = "Smith";
+// var employee = {
+//     "firstName": firstName,
+//     "lastName": lastName
+// }
+//
+// sitePersonel.employees.push(employee);
+//
+// console.log(sitePersonel);
+//
+// var manager = "Jane Doe";
+// sitePersonel.employees[0].manager = manager;
+//
+// console.log(sitePersonel);
+//
+// console.log(JSON.stringify(sitePersonel));
