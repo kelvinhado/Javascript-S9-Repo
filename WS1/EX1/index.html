@@ -6,28 +6,100 @@
 <head>
 
     <title>Javascript TD Application</title>
-
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.light_blue-amber.min.css" />
+     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
 
 <body>
-  <h2>TD 1 - Javascript</h2>
-  <h3> Drivy </h3>
-  <div id="result">bla bla</div>
 
-  <table id="resulTable">
-    <tbody>
-        <tr>
-          <th>id</th>
-          <th>price</th>
-          <th>insurance</th>
-          <th>assistance</th>
-          <th>drivy</th>
-          <th>dedRecution</th>
-        </tr>
+  <!-- Simple header with scrollable tabs. -->
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title">Drivy DashBoard</span>
+      </div>
+      <!-- Tabs -->
+      <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+        <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Rentals</a>
+        <a href="#scroll-tab-2" class="mdl-layout__tab">Vehicules</a>
+        <a href="#scroll-tab-3" class="mdl-layout__tab">Bills</a>
+      </div>
+    </header>
 
-      </tbody>
-    </table>
+    <div class="mdl-layout__drawer">
+      <span class="mdl-layout-title">Menu</span>
+    </div>
+
+    <main class="mdl-layout__content">
+      <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+        <div class="page-content">
+
+          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="rentalsTable">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">ID</th>
+                <th class="mdl-data-table__cell--non-numeric">Driver</th>
+                <th class="mdl-data-table__cell--non-numeric">CarID</th>
+                <th class="mdl-data-table__cell--non-numeric">pickupDate</th>
+                <th class="mdl-data-table__cell--non-numeric">returnDate</th>
+                <th>Distance(km)</th>
+                <th>Reduction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <!--<div id="result">bla bla</div>-->
+        </div>
+      </section>
+      <section class="mdl-layout__tab-panel" id="scroll-tab-2">
+        <div class="page-content">
+          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="vehiculesTable">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">ID</th>
+                <th class="mdl-data-table__cell--non-numeric">Vehicule</th>
+                <th>PricePerDay</th>
+                <th>PricePerKm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="mdl-layout__tab-panel" id="scroll-tab-3">
+        <div class="page-content">
+          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="billsTable">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">ID</th>
+                <th>Price</th>
+                <th>Insurance</th>
+                <th>Assistance</th>
+                <th>Drivy</th>
+                <th>Reduction</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
 
 
 

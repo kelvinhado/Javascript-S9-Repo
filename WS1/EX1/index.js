@@ -138,6 +138,8 @@ function calculDeductibleReduction(rental) {
 function storeReservationsInJson() {
   for(var i = 0; i < rentals.length; i++) {
 
+addRowToRentalsTable(rentals[i]);
+
     /* calcul of the differentes commissions */
     var rentalPrice = calculRentalPrice(rentals[i]);
     var deductibleReduction = calculDeductibleReduction(rentals[i]);
@@ -201,7 +203,12 @@ function storeReservationsInJson() {
   Running Process
   *
   */
+  for(var i = 0 ; i < cars.length; i++) {
+      addRowToVehiculesTable(cars[i]);
+  }
+
 storeReservationsInJson();
+
 
 
 /*
@@ -209,31 +216,70 @@ storeReservationsInJson();
   *
   */
 
+  function addRowToRentalsTable(rental) {
+      var table = document.getElementById("rentalsTable");
+      var row = table.insertRow(1);
+      var cell1 = row.insertCell(0);  //id
+      var cell2 = row.insertCell(1);  //driver
+      var cell3 = row.insertCell(2);  //CarId
+      var cell4 = row.insertCell(3);  //pickupDate
+      var cell5 = row.insertCell(4);  //returnDate
+      var cell6 = row.insertCell(5);  //Distance
+      var cell7 = row.insertCell(6);  //reduction
+      cell1.innerHTML = rental.id;
+      cell2.innerHTML = rental.driver.lastName + " " + rental.driver.firstName;
+      cell3.innerHTML = rental.carId;
+      cell4.innerHTML = rental.pickupDate;
+      cell5.innerHTML = rental.returnDate;
+      cell6.innerHTML = rental.distance;
+      cell7.innerHTML = rental.options.deductibleReduction;
+  }
 
+  function addRowToVehiculesTable(car) {
+      var table = document.getElementById("vehiculesTable");
+      var row = table.insertRow(1);
+      var cell1 = row.insertCell(0);  //id
+      var cell2 = row.insertCell(1);  //vehicule
+      var cell3 = row.insertCell(2);  //pricePerDay
+      var cell4 = row.insertCell(3);  //pricePerKm
+      cell1.innerHTML = car.id;
+      cell2.innerHTML = car.vehicule;
+      cell3.innerHTML = car.pricePerDay + "€";
+      cell4.innerHTML = car.pricePerKm + "€";
+  }
 
+  function addRowToBillsTable(rentalBill) {
+      var table = document.getElementById("billsTable");
+      var row = table.insertRow(1);
+      var cell1 = row.insertCell(0);  //id
+      var cell2 = row.insertCell(1);  //Price
+      var cell3 = row.insertCell(2);  //insurance
+      var cell4 = row.insertCell(3);  //assistance
+      var cell5 = row.insertCell(4);  //drivy
+      var cell6 = row.insertCell(5);  //reduction
+      cell1.innerHTML = rentalBill.id;
+      cell2.innerHTML = rentalBill.price + "€";
+      cell3.innerHTML = rentalBill.insurance + "€";
+      cell4.innerHTML = rentalBill.assistance + "€";
+      cell5.innerHTML = rentalBill.drivy + "€";
+      cell6.innerHTML = rentalBill.deductibleReduction + "€";
+  }
 
   var result = "";
   for(var i = 0; i < dataJsonResult.reservations.length; i++) {
 
-    var reservation = dataJsonResult.reservations;
-    var dataTable = [
-                      reservation[i].id,
-                      reservation[i].price,
-                      reservation[i].commission.insurance,
-                      reservation[i].commission.assistance,
-                      reservation[i].commission.drivy,
-                      reservation[i].options.deductibleReduction
-                    ];
 
-    // var tabBody = document.getElementsByTagName("tbody").item(i);
-    // var row= document.createElement("tr");
-    // for(var j = 0; j<6; j++) {
-    //     var cell = document.createElement("td");
-    //     var txtnode =document.createTextNode(dataTable[j]);
-    //     cell.appendChild(txtnode);
-    //     row.appendChild(cell);
-    //     tabBody.appendChild(row);
-    // }
+    var reservation = dataJsonResult.reservations;
+    var rentalBill = {
+                      "id" : reservation[i].id,
+                      "price" : reservation[i].price,
+                      "insurance" : reservation[i].commission.insurance,
+                      "assistance" : reservation[i].commission.assistance,
+                      "drivy" : reservation[i].commission.drivy,
+                      "deductibleReduction" : reservation[i].options.deductibleReduction
+                    };
+
+      addRowToBillsTable(rentalBill);
       result += reservation[i].id
                 + " = " + reservation[i].price +"€<br/> ";
 
