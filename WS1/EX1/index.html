@@ -6,9 +6,11 @@
 <head>
 
     <title>Javascript TD Application</title>
-    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.light_blue-amber.min.css" />
-     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles/google-material-light-blue.css" />
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
+    <link rel="stylesheet" href="styles/material-design.css">
+    <link rel="stylesheet" href="styles/style.css">
+
 </head>
 
 
@@ -30,14 +32,15 @@
     </header>
 
     <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">Menu</span>
+      <span class="mdl-layout-title">My Account</span>
+      <span class="mdl-layout-title">Log Out</span>
     </div>
 
     <main class="mdl-layout__content">
       <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
         <div class="page-content">
 
-          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="rentalsTable">
+          <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" id="rentalsTable">
             <thead>
               <tr>
                 <th class="mdl-data-table__cell--non-numeric">ID</th>
@@ -61,7 +64,7 @@
       </section>
       <section class="mdl-layout__tab-panel" id="scroll-tab-2">
         <div class="page-content">
-          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="vehiculesTable">
+          <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" id="vehiculesTable">
             <thead>
               <tr>
                 <th class="mdl-data-table__cell--non-numeric">ID</th>
@@ -79,7 +82,7 @@
       </section>
       <section class="mdl-layout__tab-panel" id="scroll-tab-3">
         <div class="page-content">
-          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="billsTable">
+          <table class="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" id="billsTable">
             <thead>
               <tr>
                 <th class="mdl-data-table__cell--non-numeric">ID</th>

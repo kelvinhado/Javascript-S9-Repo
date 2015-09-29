@@ -86,7 +86,7 @@ var resa = [];
 dataJsonDebitCredit.resa = resa;
 
 /*
- FUNCTIONS
+ TOOLS FUNCTIONS
  *
  */
 
@@ -135,10 +135,13 @@ function calculDeductibleReduction(rental) {
     return 0;
 }
 
+
+
+
 function storeReservationsInJson() {
+
   for(var i = 0; i < rentals.length; i++) {
 
-addRowToRentalsTable(rentals[i]);
 
     /* calcul of the differentes commissions */
     var rentalPrice = calculRentalPrice(rentals[i]);
@@ -199,89 +202,77 @@ addRowToRentalsTable(rentals[i]);
 }
 
 
+
+
+
+
+
+
+
+
+
 /*
   Running Process
   *
   */
+
+  // populate cars UI table.
   for(var i = 0 ; i < cars.length; i++) {
-      addRowToVehiculesTable(cars[i]);
+    var table = document.getElementById("vehiculesTable");
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);  //id
+    var cell2 = row.insertCell(1);  //vehicule
+    var cell3 = row.insertCell(2);  //pricePerDay
+    var cell4 = row.insertCell(3);  //pricePerKm
+    cell1.innerHTML = cars[i].id;
+    cell2.innerHTML = cars[i].vehicule;
+    cell3.innerHTML = cars[i].pricePerDay + "€";
+    cell4.innerHTML = cars[i].pricePerKm + "€";
   }
 
+  // populate rentals UI table
+  for(var i = 0; i < rentals.length; i++) {
+    var table = document.getElementById("rentalsTable");
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);  //id
+    var cell2 = row.insertCell(1);  //driver
+    var cell3 = row.insertCell(2);  //CarId
+    var cell4 = row.insertCell(3);  //pickupDate
+    var cell5 = row.insertCell(4);  //returnDate
+    var cell6 = row.insertCell(5);  //Distance
+    var cell7 = row.insertCell(6);  //reduction
+    cell1.innerHTML = rentals[i].id;
+    cell2.innerHTML = rentals[i].driver.lastName + " " + rentals[i].driver.firstName;
+    cell3.innerHTML = rentals[i].carId;
+    cell4.innerHTML = rentals[i].pickupDate;
+    cell5.innerHTML = rentals[i].returnDate;
+    cell6.innerHTML = rentals[i].distance;
+    cell7.innerHTML = rentals[i].options.deductibleReduction;
+  }
+
+//
 storeReservationsInJson();
 
 
-
-/*
-  UI Section that display result on HTML page
-  *
-  */
-
-  function addRowToRentalsTable(rental) {
-      var table = document.getElementById("rentalsTable");
-      var row = table.insertRow(1);
-      var cell1 = row.insertCell(0);  //id
-      var cell2 = row.insertCell(1);  //driver
-      var cell3 = row.insertCell(2);  //CarId
-      var cell4 = row.insertCell(3);  //pickupDate
-      var cell5 = row.insertCell(4);  //returnDate
-      var cell6 = row.insertCell(5);  //Distance
-      var cell7 = row.insertCell(6);  //reduction
-      cell1.innerHTML = rental.id;
-      cell2.innerHTML = rental.driver.lastName + " " + rental.driver.firstName;
-      cell3.innerHTML = rental.carId;
-      cell4.innerHTML = rental.pickupDate;
-      cell5.innerHTML = rental.returnDate;
-      cell6.innerHTML = rental.distance;
-      cell7.innerHTML = rental.options.deductibleReduction;
-  }
-
-  function addRowToVehiculesTable(car) {
-      var table = document.getElementById("vehiculesTable");
-      var row = table.insertRow(1);
-      var cell1 = row.insertCell(0);  //id
-      var cell2 = row.insertCell(1);  //vehicule
-      var cell3 = row.insertCell(2);  //pricePerDay
-      var cell4 = row.insertCell(3);  //pricePerKm
-      cell1.innerHTML = car.id;
-      cell2.innerHTML = car.vehicule;
-      cell3.innerHTML = car.pricePerDay + "€";
-      cell4.innerHTML = car.pricePerKm + "€";
-  }
-
-  function addRowToBillsTable(rentalBill) {
-      var table = document.getElementById("billsTable");
-      var row = table.insertRow(1);
-      var cell1 = row.insertCell(0);  //id
-      var cell2 = row.insertCell(1);  //Price
-      var cell3 = row.insertCell(2);  //insurance
-      var cell4 = row.insertCell(3);  //assistance
-      var cell5 = row.insertCell(4);  //drivy
-      var cell6 = row.insertCell(5);  //reduction
-      cell1.innerHTML = rentalBill.id;
-      cell2.innerHTML = rentalBill.price + "€";
-      cell3.innerHTML = rentalBill.insurance + "€";
-      cell4.innerHTML = rentalBill.assistance + "€";
-      cell5.innerHTML = rentalBill.drivy + "€";
-      cell6.innerHTML = rentalBill.deductibleReduction + "€";
-  }
-
-  var result = "";
+// populate bills UI table 
   for(var i = 0; i < dataJsonResult.reservations.length; i++) {
 
 
     var reservation = dataJsonResult.reservations;
-    var rentalBill = {
-                      "id" : reservation[i].id,
-                      "price" : reservation[i].price,
-                      "insurance" : reservation[i].commission.insurance,
-                      "assistance" : reservation[i].commission.assistance,
-                      "drivy" : reservation[i].commission.drivy,
-                      "deductibleReduction" : reservation[i].options.deductibleReduction
-                    };
-
-      addRowToBillsTable(rentalBill);
-      result += reservation[i].id
-                + " = " + reservation[i].price +"€<br/> ";
+    var table = document.getElementById("billsTable");
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);  //id
+    var cell2 = row.insertCell(1);  //Price
+    var cell3 = row.insertCell(2);  //insurance
+    var cell4 = row.insertCell(3);  //assistance
+    var cell5 = row.insertCell(4);  //drivy
+    var cell6 = row.insertCell(5);  //reduction
+    cell1.innerHTML = reservation[i].id;
+    cell1.setAttribute("class", "democlass");
+    cell2.innerHTML =  reservation[i].price + "€";
+    cell3.innerHTML = reservation[i].commission.insurance + "€";
+    cell4.innerHTML = reservation[i].commission.assistance + "€";
+    cell5.innerHTML = reservation[i].commission.drivy + "€";
+    cell6.innerHTML = reservation[i].options.deductibleReduction + "€";
 
 } // end for all rentals
-document.getElementById("result").innerHTML = result;
